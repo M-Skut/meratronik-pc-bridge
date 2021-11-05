@@ -1,0 +1,15 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP NUCLEO-F030R8
+F 13
+$ENDCMP
+#
+$CMP NUCLEO-F302R8
+F 13
+$ENDCMP
+#
+$CMP NUCLEO-F302R8_lysy
+F 13
+$ENDCMP
+#
+#End Doc Library
