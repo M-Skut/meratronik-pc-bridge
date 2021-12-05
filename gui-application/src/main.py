@@ -6,6 +6,8 @@ from tkinter.font import Font
 
 class Application(tk.Frame):
     # Import the rest of class methods
+    from serial_communication import serialPortsList, openPort, closePort, updatePorts, selectPort
+    from receiver import receiveTask, initSerialBuffer, decodePacket
     from gui_functions import holdButtonCallback, voltageButtonCallback, currentButtonCallback, \
             saveButtonCallback, startSavingCallback, stopSavingCallback
 
@@ -18,6 +20,10 @@ class Application(tk.Frame):
         self.measurement_mode.set("V") # Can be Volts or Amperes
         self.hold = tk.BooleanVar() # HOLD menu option
         self.hold.set(False)
+        self.port = tk.StringVar()
+        self.serial = None
+        self.file = None
+        self.serial_baudrate = 115200
         self.pack()
         self.createWidgets()
 
@@ -49,7 +55,6 @@ class Application(tk.Frame):
         self.shunt_voltage["text"] = "Znamionowy spadek napięcia bocznika (mV)"
         self.shunt_voltage.place(x=20, y=290)
 
-
         self.frequency_choice = Label(self, fg="black", font=Font(family="Arial", size=7, weight="bold"))
         self.frequency_choice["text"] = "Częstotliwość zapisu wyników"
         self.frequency_choice.place(x=233, y=240)
@@ -61,28 +66,29 @@ class Application(tk.Frame):
         self.current_button = Button(self, text="Natężenie",style="SunkableButton.TButton", command = self.currentButtonCallback)
         self.current_button.state(['pressed', 'disabled'])
         self.current_button.place(x=20, y=200)
-
+        
         self.stop_button = Button(self, text="HOLD", command = self.holdButtonCallback)
         self.stop_button.place(x=20, y=350)
 
-        self.folder_button = Button(self, text="Folder zapisu")
+        self.folder_button = Button(self, text="Folder zapisu", command = self.saveButtonCallback)
         self.folder_button.place(x=300, y=350)
 
-        self.closeButton = Button(self, text="Otwórz port")
+        self.closeButton = Button(self, text="Otwórz port", command = self.openPort)
         self.closeButton.place(x=300, y=170)
 
-        self.save_button = Button(self, text="Zamknij port")
+        self.save_button = Button(self, text="Zamknij port", command = self.closePort)
         self.save_button.place(x=300, y=200)
 
-        self.start_saving = Button(self, text="Start zapisu")
+        self.start_saving = Button(self, text="Start zapisu", command = self.startSavingCallback)
         self.start_saving.place(x=300, y=290)
 
-        self.stop_saving = Button(self, text="Stop zapisu")
+        self.stop_saving = Button(self, text="Stop zapisu", command = self.stopSavingCallback)
         self.stop_saving.state(['pressed', 'disabled'])
         self.stop_saving.place(x=300, y=320)
 
-        self.com_ports_list = Combobox(self, values=["0"])
+        self.com_ports_list = Combobox(self, values=self.serialPortsList(), postcommand=self.updatePorts)
         self.com_ports_list.place(x=130, y=200)
+        self.com_ports_list.bind('<<ComboboxSelected>>', self.selectPort)
 
         self.shunt_range_list = Combobox(self, values = [5, 10, 15, 20, 25, 50, 75, 100])
         self.shunt_range_list.place(x=20, y=260)
@@ -90,7 +96,7 @@ class Application(tk.Frame):
         self.shunt_voltage_list = Combobox(self, values=[30, 45, 60, 75, 100])
         self.shunt_voltage_list.place(x=20, y=310)
 
-        self.save_options = Combobox(self, values=["1", "2"])
+        self.save_options = Combobox(self, values=["1", "2"])  #temporary name #save frequency
         self.save_options.place(x=233, y=260)
 
 

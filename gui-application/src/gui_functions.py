@@ -33,4 +33,4 @@ def stopSavingCallback(self):
     self.start_saving.state(['!pressed', '!disabled'])
     self.stop_saving.state(['pressed', 'disabled'])
     self.file.close()
-
+    
