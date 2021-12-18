@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Meratronik PC Bridge readings</title>
+    <link rel="icon" type="image/png" href="/static/favicon.ico" />
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="/static/dashboard.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3"" href=" #">Meratronik PC Bridge</a>
+        <span class="navbar-text col-md-3">
+            Data gathered from Meratronik V-541 Voltmeter
+        </span>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="sidebar-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">
+                                <span data-feather="bar-chart-2"></span>
+                                Gathered voltage readings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/static/current.html">
+                                <span data-feather="bar-chart-2"></span>
+                                Gathered current readings
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">
+                                <span data-feather="user"></span>
+                                About this webpage  <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">About this website</h1>
+                </div>
+                <p>This web application was created by Marian Skut, Konrad Fiałkowski, Bartłomiej Paluch and Michał Krzyworzeka</p>
+                <p>Examples and resources used to build this webapp:</p>
+                <p><a href="https://github.com/roniemartinez/real-time-charts-with-flask">Example of real-time chart
+                        plotting by Ronie Martinez</a></p>
+                <p><a href="https://github.com/twbs/bootstrap">BootStrap with &quot;Dashboard&quot; example</a></p>
+                <p><a href="https://flask.palletsprojects.com/en/1.1.x/patterns/sqlite3/">Flask and its
+                        documentation on how to integrate it with SQLite3</a></p>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
+</body>
+
+</html>
