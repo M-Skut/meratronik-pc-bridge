@@ -9,18 +9,22 @@ class Application(tk.Frame):
     from serial_communication import serialPortsList, openPort, closePort, updatePorts, selectPort
     from receiver import receiveTask, initSerialBuffer, decodePacket
     from gui_functions import holdButtonCallback, voltageButtonCallback, currentButtonCallback, \
-            saveButtonCallback, startSavingCallback, stopSavingCallback
+            saveButtonCallback, startSavingCallback, stopSavingCallback, relButtonCallback, periodicSave
 
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
-        self.measurement = tk.StringVar()
-        self.measurement.set("0.0000 DC") # Default value
+        self.port = tk.StringVar()
+        self.measurement = tk.StringVar()        
+        self.measurement.set("0.0000 V DC") # Default value
+        self.raw_measurement = 0.00 # Used for internal functions
+        self.measurement_offset = 0.00 # Used for REL function
         self.measurement_mode = tk.StringVar()
         self.measurement_mode.set("V") # Can be Volts or Amperes
         self.hold = tk.BooleanVar() # HOLD menu option
+        self.rel = tk.BooleanVar()  # REL menu option
+        self.rel.set(False)
         self.hold.set(False)
-        self.port = tk.StringVar()
         self.serial = None
         self.file = None
         self.serial_baudrate = 115200
@@ -29,7 +33,7 @@ class Application(tk.Frame):
 
     def showInfo(self, message):
         messagebox.showinfo("Miernik", message)
-        
+
     def createWidgets(self):
         # Place for creating widgets
         self.master.title("Miernik")
@@ -56,19 +60,23 @@ class Application(tk.Frame):
         self.shunt_voltage.place(x=20, y=290)
 
         self.frequency_choice = Label(self, fg="black", font=Font(family="Arial", size=7, weight="bold"))
-        self.frequency_choice["text"] = "Częstotliwość zapisu wyników"
-        self.frequency_choice.place(x=233, y=240)
+        self.frequency_choice["text"] = "Częstotliwość zapisu wyników na sekundę"
+        self.frequency_choice.place(x=200, y=240)
 
         #buttons
         self.voltage_button = Button(self, text="Napięcie",style="SunkableButton.TButton", command = self.voltageButtonCallback)
         self.voltage_button.place(x=20, y=170)
+        self.voltage_button.state(['pressed', 'disabled'])
 
         self.current_button = Button(self, text="Natężenie",style="SunkableButton.TButton", command = self.currentButtonCallback)
-        self.current_button.state(['pressed', 'disabled'])
         self.current_button.place(x=20, y=200)
         
         self.stop_button = Button(self, text="HOLD", command = self.holdButtonCallback)
         self.stop_button.place(x=20, y=350)
+
+        self.rel_button = Button(self, text="REL", command = self.relButtonCallback)
+        self.rel_button.place(x=150, y=350)
+
 
         self.folder_button = Button(self, text="Folder zapisu", command = self.saveButtonCallback)
         self.folder_button.place(x=300, y=350)
@@ -95,8 +103,8 @@ class Application(tk.Frame):
 
         self.shunt_voltage_list = Combobox(self, values=[30, 45, 60, 75, 100])
         self.shunt_voltage_list.place(x=20, y=310)
-
-        self.save_options = Combobox(self, values=["1", "2"])  #temporary name #save frequency
+        
+        self.save_options = Combobox(self, values=["0.1", "0.5", "1", "2", "4", "8"])  #save frequency
         self.save_options.place(x=233, y=260)
 
 
